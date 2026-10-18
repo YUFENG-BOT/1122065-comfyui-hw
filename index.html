@@ -12,6 +12,7 @@
       --text: #c9d1d9;
       --border: #30363d;
       --code-bg: #030407;
+      --danger: #f85149;
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -43,9 +44,18 @@
       gap: 20px;
       margin: 20px 0;
     }
+    .failed-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
     @media (max-width: 650px) {
       .comparison-grid {
         grid-template-columns: 1fr;
+      }
+      .failed-grid {
+        grid-template-columns: 1fr 1fr;
       }
     }
     .card {
@@ -55,7 +65,14 @@
       padding: 16px;
       text-align: center;
     }
-    .card img, .workflow-card img {
+    .failed-card {
+      background: var(--card-bg);
+      border: 1px solid #492323;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .card img, .failed-card img, .workflow-card img {
       max-width: 100%;
       height: auto;
       border-radius: 6px;
@@ -67,6 +84,17 @@
       margin-top: 10px;
       font-weight: 600;
       color: var(--accent);
+    }
+    .failed-caption {
+      margin-top: 8px;
+      font-weight: 600;
+      color: var(--danger);
+      font-size: 0.9em;
+    }
+    .failed-desc {
+      font-size: 0.8em;
+      color: #8b949e;
+      margin-top: 4px;
     }
     .prompt-box {
       background: var(--card-bg);
@@ -96,6 +124,11 @@
       border-radius: 8px;
       padding: 20px;
       line-height: 1.8;
+    }
+    .experiment-step {
+      border-left: 3px solid var(--accent);
+      padding-left: 14px;
+      margin: 16px 0;
     }
     .download-link {
       display: inline-block;
@@ -150,23 +183,58 @@
       <a href="workflow.json" download class="download-link">下載 workflow.json 檔案</a>
     </div>
 
-    <!-- 4. 個人心得 -->
-    <h2>4. 實作心得與技術反思</h2>
+    <!-- 4. 個人心得與詳細實驗過程 -->
+    <h2>4. 實作心得與詳細實驗過程</h2>
     <div class="reflection">
       <p>
-        這次用 ComfyUI 做圖生圖，一開始最不習慣的是所有東西都要自己手動拉線，連模型、CLIP 和 VAE 都要分開接好，少一條線或接錯孔系統就直接報錯給你看。但習慣這種節點式邏輯後，反而覺得比以前用一整包包好的介面更好除錯，哪一步出問題都很直觀。
+        這次用 ComfyUI 真的被搞了一陣子。跟以前那種按一個按鈕就出圖的軟體不一樣，這裡模型、CLIP、VAE 全部都要自己一條一條線拉好。中間有好幾次算出來怪怪的，後來回頭檢查才發現是提示詞那兩個框框右邊的小點根本沒插到 KSampler 上，等於 AI 根本沒吃到我的 Prompt 就自己亂算。
       </p>
       <p>
-        本次目的在於<strong>「讓生成的章魚圖片能對照我的五官位置」</strong>。實際跑的時候踩了不少坑：
+        本次目的在於<strong>「讓生成的章魚圖片能對照我的五官位置」</strong>。因為我的原圖是用手機由下往上拍的大仰角，鼻子特別大，要把這張臉改成章魚而且角度不能跑掉，中間試了好幾版才成功：
       </p>
-      <ul>
-        <li><strong>去雜訊強度（Denoise）是最大的坑</strong>：預設的 1.0 會把整張自拍完全抹平，直接在黑背景上畫一隻跟原圖毫無關係的遠景章魚；但調太低（0.3 左右）又只是在我臉上加一點濾鏡，根本看不出章魚感。後來反覆測試，發現壓在 <strong>0.48 ~ 0.52</strong> 是最好的甜蜜點，剛好能把皮膚換成黏滑的章魚吸盤材質，同時死死咬住原本由下往上的大鼻子跟眼睛角度。</li>
-        <li><strong>提示詞要配合照片的幾何位置寫</strong>：如果只寫「Cthulhu monster」，AI 會隨便亂長；一定要在 Prompt 裡強調「吸盤長在下巴跟嘴角」、「眼睛位置與間距對齊」，並在負向詞排除正常人臉跟美女臉，生成出來才不會走鐘變成一般的深海人魚。</li>
-      </ul>
+
+      <div class="experiment-step">
+        <strong>第 1 次嘗試（Denoise 1.00、線沒接好）：</strong><br>
+        一開始什麼都沒改直接按執行，去雜訊強度停在 1.0，提示詞的線也沒插好。算出來直接傻眼，黑漆漆的背景裡飄著兩隻不知道哪來的小章魚怪，我原本由下往上的大鼻子自拍直接被抹得一乾二淨，完全沒有原圖的影子。
+      </div>
+
+      <div class="experiment-step">
+        <strong>第 2 次嘗試（Denoise 0.70）：</strong><br>
+        把 Denoise 降到 0.7，提示詞加上克蘇魯風格。這次總算有大特寫了，但長得超可怕——整張臉慘白大張嘴，額頭中間還硬生生爆出一顆綠色大眼球，看起來根本是喪屍不是章魚，完全沒有我要的黏滑軟體動物感。
+      </div>
+
+      <div class="experiment-step">
+        <strong>第 3 次嘗試（改提示詞修臉）：</strong><br>
+        覺得第 2 版太醜，我想說加點好看的詞修一下，結果加了 portrait 跟一些人像字眼後，AI 直接跑偏，算出來變成一個皮膚超好、畫著眼線的漂亮女生，只有脖子旁邊意思意思長了兩根章魚鬚。雖然變好看了，但這根本不是我要的整隻章魚怪物，原圖的搞笑角度也沒了。
+      </div>
+
+      <div class="experiment-step">
+        <strong>第 4 次嘗試（Denoise 降到 0.50、Prompt 鎖定位置）：</strong><br>
+        最後發現問題出在 Denoise 還是太高，而且 Prompt 不能出現任何跟「人」有關的詞。我把負向提示詞填滿 human face、woman，正向詞特別寫「吸盤長在下巴跟嘴邊」、「眼睛要對齊原本的位置」，最關鍵的是把 Denoise 壓到 0.5 左右。這次一按執行就對了，AI 死死咬住原本由下往上的大頭透視，但整張臉的皮肉全部變成發光的藍色章魚跟觸手，五官位置跟我的自拍照完全對得上。
+      </div>
+
       <p>
-        這次實作讓我搞懂了 Denoise 到底是怎麼在原圖結構和新提示詞之間拉扯的，比起亂槍打鳥碰運氣，用節點精確控制每個數值的出圖成功率高非常多。
+        試完這幾輪最大的收穫就是搞懂 Denoise 到底在幹嘛。調太高 AI 就放飛自我亂畫，調太低又只像套濾鏡。只要把數值抓在 0.5 左右，搭配精確講好位置的 Prompt，就能在保留自己臉型角度的同時把材質全部換掉。
       </p>
     </div>
+
+<!-- 5. 過程踩坑與失敗產物區 -->
+    <h2>5. 過程踩坑與失敗產物區</h2>
+    <div class="failed-grid">
+      <div class="failed-card">
+        <img src="images/output2.png" alt="失敗圖 1">
+      </div>
+      <div class="failed-card">
+        <img src="images/output3.png" alt="失敗圖 2">
+      </div>
+      <div class="failed-card">
+        <img src="images/output4.png" alt="失敗圖 3">
+      </div>
+      <div class="failed-card">
+        <img src="images/output5.png" alt="失敗圖 4">
+      </div>
+    </div>
+
   </div>
 
 </body>
