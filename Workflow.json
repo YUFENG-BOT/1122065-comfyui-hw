@@ -1,0 +1,523 @@
+{
+  "id": "73fa81d6-4810-4ced-9dfa-bff050738e9a",
+  "revision": 0,
+  "last_node_id": 20,
+  "last_link_id": 17,
+  "nodes": [
+    {
+      "id": 3,
+      "type": "VAEEncode",
+      "pos": [
+        787.5480102238237,
+        238.76693855852824
+      ],
+      "size": [
+        148,
+        46
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "pixels",
+          "type": "IMAGE",
+          "link": 4
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 15
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            7
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEEncode"
+      }
+    },
+    {
+      "id": 7,
+      "type": "KSampler",
+      "pos": [
+        213.0516933589165,
+        474.83574110717706
+      ],
+      "size": [
+        270,
+        262
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 13
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 11
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 12
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        325387767820273,
+        "randomize",
+        20,
+        8,
+        "euler",
+        "simple",
+        1
+      ],
+      "widgets_values_named": {
+        "seed": 325387767820273,
+        "control_after_generate": "randomize",
+        "steps": 20,
+        "cfg": 8,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "denoise": 1
+      }
+    },
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [
+        1163.3126259994426,
+        344.91051323149316
+      ],
+      "size": [
+        140,
+        46
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 8
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            10
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 10,
+      "type": "SaveImage",
+      "pos": [
+        1442.3219455288313,
+        341.08003878237486
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "properties": {},
+      "widgets_values": [
+        "ComfyUI"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "ComfyUI"
+      }
+    },
+    {
+      "id": 13,
+      "type": "LoadImage",
+      "pos": [
+        389.2501018514462,
+        75.20002807708124
+      ],
+      "size": [
+        270,
+        102
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            4
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "下載 (1).jpg",
+        "image"
+      ],
+      "widgets_values_named": {
+        "image": "下載 (1).jpg",
+        "upload": "image"
+      }
+    },
+    {
+      "id": 15,
+      "type": "CLIPTextEncode",
+      "pos": [
+        694.5135324998258,
+        418.74950724374787
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "(masterpiece, best quality:1.2), extreme close-up fisheye low-angle perspective, exact original facial proportions and composition, organic octopus creature hybrid, bulbous octopus mantle head, wet iridescent cephalopod skin, suction cups lining the jawline and chin, slimy tentacles hanging from lower mouth, glossy alien eyes matching original eye placement, biological deep sea entity, dramatic specular highlights, cinematic lighting, photorealistic macro texture"
+      ],
+      "widgets_values_named": {
+        "text": "(masterpiece, best quality:1.2), extreme close-up fisheye low-angle perspective, exact original facial proportions and composition, organic octopus creature hybrid, bulbous octopus mantle head, wet iridescent cephalopod skin, suction cups lining the jawline and chin, slimy tentacles hanging from lower mouth, glossy alien eyes matching original eye placement, biological deep sea entity, dramatic specular highlights, cinematic lighting, photorealistic macro texture"
+      }
+    },
+    {
+      "id": 16,
+      "type": "CLIPTextEncode",
+      "pos": [
+        689.7277894752119,
+        701.7932676758851
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 17
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            12
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "(worst quality, low quality:1.4), normal human face, smooth porcelain skin, pretty girl, female, cartoon, anime, 3D CGI, changed composition, changed camera angle, distant shot, extra eyes, mutated extra nostrils, blurry, bad anatomy"
+      ],
+      "widgets_values_named": {
+        "text": "(worst quality, low quality:1.4), normal human face, smooth porcelain skin, pretty girl, female, cartoon, anime, 3D CGI, changed composition, changed camera angle, distant shot, extra eyes, mutated extra nostrils, blurry, bad anatomy"
+      }
+    },
+    {
+      "id": 18,
+      "type": "VAELoader",
+      "pos": [
+        93.40610171456308,
+        -203.7939884765845
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            14,
+            15
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "ae.safetensors"
+      ],
+      "widgets_values_named": {
+        "vae_name": "ae.safetensors"
+      }
+    },
+    {
+      "id": 19,
+      "type": "CLIPLoader",
+      "pos": [
+        -193.29953119796005,
+        -100.28998006963752
+      ],
+      "size": [
+        270,
+        106
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            16,
+            17
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "qwen_3_4b_fp8_mixed.safetensors",
+        "stable_diffusion",
+        "default"
+      ],
+      "widgets_values_named": {
+        "clip_name": "qwen_3_4b_fp8_mixed.safetensors",
+        "type": "stable_diffusion",
+        "device": "default"
+      }
+    },
+    {
+      "id": 20,
+      "type": "UNETLoader",
+      "pos": [
+        -326.8241867707069,
+        65.05363723013625
+      ],
+      "size": [
+        270,
+        82
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "z_image_turbo_int8_convrot.safetensors",
+        "default"
+      ],
+      "widgets_values_named": {
+        "unet_name": "z_image_turbo_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      }
+    }
+  ],
+  "links": [
+    [
+      4,
+      13,
+      0,
+      3,
+      0,
+      "IMAGE"
+    ],
+    [
+      7,
+      3,
+      0,
+      7,
+      3,
+      "LATENT"
+    ],
+    [
+      8,
+      7,
+      0,
+      8,
+      0,
+      "LATENT"
+    ],
+    [
+      10,
+      8,
+      0,
+      10,
+      0,
+      "IMAGE"
+    ],
+    [
+      11,
+      15,
+      0,
+      7,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      12,
+      16,
+      0,
+      7,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      13,
+      20,
+      0,
+      7,
+      0,
+      "MODEL"
+    ],
+    [
+      14,
+      18,
+      0,
+      8,
+      1,
+      "VAE"
+    ],
+    [
+      15,
+      18,
+      0,
+      3,
+      1,
+      "VAE"
+    ],
+    [
+      16,
+      19,
+      0,
+      15,
+      0,
+      "CLIP"
+    ],
+    [
+      17,
+      19,
+      0,
+      16,
+      0,
+      "CLIP"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.3278677989184768,
+      "offset": [
+        1304.4833964833851,
+        1382.3665810401876
+      ]
+    },
+    "frontendVersion": "1.55.17"
+  },
+  "version": 0.4
+}
